@@ -1,0 +1,99 @@
+{
+  "basic": [
+    {
+      "id": "basic-1",
+      "title": "Hello World",
+      "problemText": "Write a Python program that prints 'Hello, World!' to the console.",
+      "input": "No input required",
+      "output": "Hello, World!",
+      "videoUrl": "",
+      "solution": "print('Hello, World!')",
+      "explanation": "This is the simplest Python program. The print() function outputs text to the console.",
+      "testCases": [
+        {
+          "input": "",
+          "expectedOutput": "Hello, World!"
+        }
+      ]
+    },
+    {
+      "id": "basic-2",
+      "title": "Add Two Numbers",
+      "problemText": "Write a program that takes two numbers as input and prints their sum.",
+      "input": "Two integers separated by space\nExample: 5 3",
+      "output": "The sum of the two numbers\nExample: 8",
+      "videoUrl": "",
+      "solution": "a, b = map(int, input().split())\nprint(a + b)",
+      "explanation": "We use input() to get user input, split() to separate the numbers, map() to convert them to integers, and then add them together.",
+      "testCases": [
+        {
+          "input": "5 3",
+          "expectedOutput": "8"
+        },
+        {
+          "input": "10 20",
+          "expectedOutput": "30"
+        }
+      ]
+    }
+  ],
+  "logical": [
+    {
+      "id": "logical-1",
+      "title": "Check Even or Odd",
+      "problemText": "Write a program that checks if a number is even or odd.",
+      "input": "A single integer\nExample: 7",
+      "output": "Even or Odd\nExample: Odd",
+      "videoUrl": "",
+      "solution": "num = int(input())\nif num % 2 == 0:\n    print('Even')\nelse:\n    print('Odd')",
+      "explanation": "We use the modulo operator (%) to check if the number is divisible by 2. If the remainder is 0, it's even; otherwise, it's odd.",
+      "testCases": [
+        {
+          "input": "7",
+          "expectedOutput": "Odd"
+        },
+        {
+          "input": "8",
+          "expectedOutput": "Even"
+        }
+      ]
+    }
+  ],
+  "data-structures": [
+    {
+      "id": "ds-1",
+      "title": "Find Maximum in List",
+      "problemText": "Write a program that finds the maximum number in a list.",
+      "input": "A list of integers separated by space\nExample: 3 7 2 9 1",
+      "output": "The maximum number\nExample: 9",
+      "videoUrl": "",
+      "solution": "numbers = list(map(int, input().split()))\nprint(max(numbers))",
+      "explanation": "We convert the input to a list of integers and use the built-in max() function to find the maximum value.",
+      "testCases": [
+        {
+          "input": "3 7 2 9 1",
+          "expectedOutput": "9"
+        }
+      ]
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "algo-1",
+      "title": "Linear Search",
+      "problemText": "Implement a linear search algorithm to find an element in a list.",
+      "input": "First line: list of integers\nSecond line: target number\nExample:\n3 7 2 9 1\n7",
+      "output": "Index of the element or -1 if not found\nExample: 1",
+      "videoUrl": "",
+      "solution": "arr = list(map(int, input().split()))\ntarget = int(input())\nfor i, num in enumerate(arr):\n    if num == target:\n        print(i)\n        break\nelse:\n    print(-1)",
+      "explanation": "Linear search checks each element in the list sequentially until it finds the target or reaches the end.",
+      "testCases": [
+        {
+          "input": "3 7 2 9 1\n7",
+          "expectedOutput": "1"
+        }
+      ]
+    }
+  ]
+}
+

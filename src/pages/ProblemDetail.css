@@ -1,0 +1,61 @@
+.problem-detail-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.problem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.problem-collapse {
+  margin-top: 20px;
+}
+
+.problem-collapse .ant-collapse-header {
+  font-weight: 600;
+}
+
+.io-section {
+  margin-top: 16px;
+}
+
+.io-box {
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  margin-top: 8px;
+}
+
+.io-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', monospace;
+}
+
+.solution-box {
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.solution-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.video-container {
+  margin-top: 16px;
+}
+

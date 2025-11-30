@@ -1,0 +1,26 @@
+.compiler-card {
+  margin-top: 20px;
+}
+
+.compiler-section {
+  margin-bottom: 16px;
+}
+
+.output-box {
+  margin-top: 8px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  min-height: 50px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.output-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', monospace;
+}
+

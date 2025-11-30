@@ -1,0 +1,27 @@
+[
+  {
+    "id": "basic",
+    "name": "Basic Problems",
+    "description": "Fundamental Python programming problems for beginners",
+    "icon": "CodeOutlined"
+  },
+  {
+    "id": "logical",
+    "name": "Logical Problems",
+    "description": "Problems that test your logical thinking and problem-solving skills",
+    "icon": "BulbOutlined"
+  },
+  {
+    "id": "data-structures",
+    "name": "Data Structures",
+    "description": "Learn about lists, dictionaries, sets, and tuples",
+    "icon": "DatabaseOutlined"
+  },
+  {
+    "id": "algorithms",
+    "name": "Algorithms",
+    "description": "Common algorithms and their implementations",
+    "icon": "ThunderboltOutlined"
+  }
+]
+
