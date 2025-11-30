@@ -28,6 +28,12 @@
     "name": "Div and Mod",
     "description": "Есептер бөлу және модуль операцияларын қолдану",
     "icon": "ToolOutlined"
+  },
+  {
+    "id": "for-loops",
+    "name": "For циклі",
+    "description": "For циклі арқылы есептер шығару. Цикл for, сондай-ақ, параметрмен цикл деп аталады, Питон тілінде мүмкіндіктерге бай.",
+    "icon": "ReloadOutlined"
   }
 ]
 

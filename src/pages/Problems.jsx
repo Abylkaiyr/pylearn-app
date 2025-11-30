@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Typography, Button, Space, Empty } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
-import { getThemes, getProblemsByTheme, refreshThemes, refreshProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
+import { getThemes, getProblemsByTheme, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
 import './Problems.css';
 
@@ -37,15 +37,6 @@ const Problems = () => {
     const unsubscribeProblems = subscribeToProblems((problemsData) => {
       const updatedProblems = problemsData[themeId] || [];
       setProblems(updatedProblems);
-    });
-    
-    // Also refresh once on mount
-    refreshThemes().then((themes) => {
-      const updatedTheme = themes.find(t => t.id === themeId);
-      setTheme(updatedTheme);
-    });
-    refreshProblems().then((problemsData) => {
-      setProblems(problemsData[themeId] || []);
     });
     
     // Cleanup

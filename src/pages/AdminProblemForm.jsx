@@ -51,13 +51,11 @@ const AdminProblemForm = () => {
       };
 
       if (isEdit) {
-        updateProblem(themeId, problemId, problemData);
+        await updateProblem(themeId, problemId, problemData);
         message.success('Есеп сәтті жаңартылды!');
-        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       } else {
-        addProblem(themeId, problemData);
+        await addProblem(themeId, problemData);
         message.success('Есеп сәтті құрылды!');
-        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       }
 
       navigate(`/problems/${themeId}`);

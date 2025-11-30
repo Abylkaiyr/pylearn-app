@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
           <div className="logo">
             <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
               <Text strong style={{ color: 'white', fontSize: 18 }}>
-                Python Оқыту
+                Pylearn
               </Text>
             </Link>
           </div>
@@ -91,7 +91,7 @@ const Layout = ({ children }) => {
         {children}
       </Content>
       <Footer className="app-footer">
-        Python Оқыту Платформасы ©2024 - Python Бағдарламалауды Үйреніңіз
+        Pylearn ©2025 - Python Бағдарламалауды Үйреніңіз
       </Footer>
     </AntLayout>
   );

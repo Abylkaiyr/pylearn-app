@@ -1,128 +1,45 @@
-// Import as fallback for initial load
-import problemsDataFallback from '../data/problems.json';
-import themesDataFallback from '../data/themes.json';
 import { db, isFirebaseConfigured } from './firebase';
 import { 
-  collection, 
   doc, 
-  getDoc, 
-  getDocs, 
   setDoc, 
-  deleteDoc, 
-  onSnapshot,
-  query,
-  where
+  onSnapshot
 } from 'firebase/firestore';
 
-// Cache for data
 let problemsCache = null;
 let themesCache = null;
 let problemsUnsubscribe = null;
 let themesUnsubscribe = null;
 
-// Check if Firebase is available
 const useFirebase = isFirebaseConfigured();
 
-// Firestore collection names
 const PROBLEMS_COLLECTION = 'problems';
 const THEMES_COLLECTION = 'themes';
 
-// ========== FIREBASE FUNCTIONS ==========
+if (!useFirebase) {
+  throw new Error('Firebase must be configured. Check your .env file.');
+}
 
-// Initialize Firestore with data from JSON if empty
-const initializeFirestore = async () => {
-  if (!useFirebase) return;
-
-  try {
-    // Check if problems collection exists and has data
-    const problemsSnapshot = await getDocs(collection(db, PROBLEMS_COLLECTION));
-    if (problemsSnapshot.empty) {
-      // Initialize with JSON data
-      const problemsRef = doc(db, PROBLEMS_COLLECTION, 'data');
-      await setDoc(problemsRef, problemsDataFallback);
-      console.log('Initialized Firestore problems with JSON data');
-    }
-
-    // Check if themes collection exists and has data
-    const themesSnapshot = await getDocs(collection(db, THEMES_COLLECTION));
-    if (themesSnapshot.empty) {
-      // Initialize with JSON data
-      const themesRef = doc(db, THEMES_COLLECTION, 'data');
-      await setDoc(themesRef, { themes: themesDataFallback });
-      console.log('Initialized Firestore themes with JSON data');
-    }
-  } catch (error) {
-    console.error('Error initializing Firestore:', error);
-  }
-};
-
-// Get problems from Firestore
-const getProblemsFromFirestore = async () => {
-  try {
-    const problemsRef = doc(db, PROBLEMS_COLLECTION, 'data');
-    const docSnap = await getDoc(problemsRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    }
-  } catch (error) {
-    console.error('Error getting problems from Firestore:', error);
-  }
-  return null;
-};
-
-// Get themes from Firestore
-const getThemesFromFirestore = async () => {
-  try {
-    const themesRef = doc(db, THEMES_COLLECTION, 'data');
-    const docSnap = await getDoc(themesRef);
-    if (docSnap.exists()) {
-      return docSnap.data().themes || [];
-    }
-  } catch (error) {
-    console.error('Error getting themes from Firestore:', error);
-  }
-  return null;
-};
-
-// Save problems to Firestore
 const saveProblemsToFirestore = async (problems) => {
-  if (!useFirebase) {
-    console.warn('Firebase not configured, cannot save to Firestore');
-    return false;
-  }
   try {
     const problemsRef = doc(db, PROBLEMS_COLLECTION, 'data');
     await setDoc(problemsRef, problems);
     return true;
   } catch (error) {
-    console.error('Error saving problems to Firestore:', error);
-    return false;
+    throw error;
   }
 };
 
-// Save themes to Firestore
 const saveThemesToFirestore = async (themes) => {
-  if (!useFirebase) {
-    console.warn('Firebase not configured, cannot save to Firestore');
-    return false;
-  }
   try {
     const themesRef = doc(db, THEMES_COLLECTION, 'data');
     await setDoc(themesRef, { themes });
     return true;
   } catch (error) {
-    console.error('Error saving themes to Firestore:', error);
-    return false;
+    throw error;
   }
 };
 
-// Set up real-time listener for problems
 export const subscribeToProblems = (callback) => {
-  if (!useFirebase) {
-    callback(problemsDataFallback);
-    return () => {};
-  }
-
   if (problemsUnsubscribe) {
     problemsUnsubscribe();
   }
@@ -134,23 +51,17 @@ export const subscribeToProblems = (callback) => {
       problemsCache = data;
       callback(data);
     } else {
-      callback(problemsDataFallback);
+      problemsCache = {};
+      callback({});
     }
   }, (error) => {
-    console.error('Error in problems listener:', error);
-    callback(problemsCache || problemsDataFallback);
+    console.error('Firestore listener error:', error);
   });
 
   return problemsUnsubscribe;
 };
 
-// Set up real-time listener for themes
 export const subscribeToThemes = (callback) => {
-  if (!useFirebase) {
-    callback(themesDataFallback);
-    return () => {};
-  }
-
   if (themesUnsubscribe) {
     themesUnsubscribe();
   }
@@ -162,215 +73,148 @@ export const subscribeToThemes = (callback) => {
       themesCache = data;
       callback(data);
     } else {
-      callback(themesDataFallback);
+      themesCache = [];
+      callback([]);
     }
   }, (error) => {
-    console.error('Error in themes listener:', error);
-    callback(themesCache || themesDataFallback);
+    console.error('Firestore listener error:', error);
   });
 
   return themesUnsubscribe;
 };
 
-// ========== PUBLIC API ==========
-
-// Get problems (synchronous, uses cache)
 export const getProblems = () => {
-  if (problemsCache) {
-    return problemsCache;
-  }
-  return problemsDataFallback;
+  return problemsCache || {};
 };
 
-// Get themes (synchronous, uses cache)
 export const getThemes = () => {
-  if (themesCache) {
-    return themesCache;
-  }
-  return themesDataFallback;
+  return themesCache || [];
 };
 
-// Refresh problems from Firestore
-export const refreshProblems = async () => {
-  if (useFirebase) {
-    const data = await getProblemsFromFirestore();
-    if (data) {
-      problemsCache = data;
-      return data;
-    }
-  }
-  // Fallback to JSON
-  problemsCache = problemsDataFallback;
-  return problemsDataFallback;
-};
-
-// Refresh themes from Firestore
-export const refreshThemes = async () => {
-  if (useFirebase) {
-    const data = await getThemesFromFirestore();
-    if (data) {
-      themesCache = data;
-      return data;
-    }
-  }
-  // Fallback to JSON
-  themesCache = themesDataFallback;
-  return themesDataFallback;
-};
-
-// Get problems by theme
 export const getProblemsByTheme = (themeId) => {
   const problems = getProblems();
   return problems[themeId] || [];
 };
 
-// Get problem by ID
 export const getProblemById = (themeId, problemId) => {
   const problems = getProblemsByTheme(themeId);
   return problems.find(p => p.id === problemId);
 };
 
-// Add problem
 export const addProblem = async (themeId, problem) => {
-  const problems = getProblems();
-  if (!problems[themeId]) {
-    problems[themeId] = [];
-  }
-  problems[themeId].push(problem);
-  
-  if (useFirebase) {
-    const success = await saveProblemsToFirestore(problems);
-    if (success) {
-      problemsCache = problems;
-      return true;
+  try {
+    const problems = getProblems();
+    const updatedProblems = { ...problems };
+    if (!updatedProblems[themeId]) {
+      updatedProblems[themeId] = [];
     }
-  }
-  
-  // Fallback: save to localStorage for export
-  localStorage.setItem('problems_temp', JSON.stringify(problems));
-  return true;
-};
-
-// Update problem
-export const updateProblem = async (themeId, problemId, updatedProblem) => {
-  const problems = getProblems();
-  if (problems[themeId]) {
-    const index = problems[themeId].findIndex(p => p.id === problemId);
-    if (index !== -1) {
-      problems[themeId][index] = { ...updatedProblem, id: problemId };
-      
-      if (useFirebase) {
-        const success = await saveProblemsToFirestore(problems);
-        if (success) {
-          problemsCache = problems;
-          return true;
-        }
-      }
-      
-      // Fallback: save to localStorage for export
-      localStorage.setItem('problems_temp', JSON.stringify(problems));
-      return true;
-    }
-  }
-  return false;
-};
-
-// Delete problem
-export const deleteProblem = async (themeId, problemId) => {
-  const problems = getProblems();
-  if (problems[themeId]) {
-    problems[themeId] = problems[themeId].filter(p => p.id !== problemId);
+    updatedProblems[themeId] = [...updatedProblems[themeId], problem];
     
-    if (useFirebase) {
-      const success = await saveProblemsToFirestore(problems);
-      if (success) {
-        problemsCache = problems;
+    await saveProblemsToFirestore(updatedProblems);
+    problemsCache = updatedProblems;
+    return true;
+  } catch (error) {
+    console.error('Error adding problem:', error);
+    throw error;
+  }
+};
+
+export const updateProblem = async (themeId, problemId, updatedProblem) => {
+  try {
+    const problems = getProblems();
+    if (problems[themeId]) {
+      const updatedProblems = { ...problems };
+      const index = updatedProblems[themeId].findIndex(p => p.id === problemId);
+      if (index !== -1) {
+        updatedProblems[themeId] = [...updatedProblems[themeId]];
+        updatedProblems[themeId][index] = { ...updatedProblem, id: problemId };
+        await saveProblemsToFirestore(updatedProblems);
+        problemsCache = updatedProblems;
         return true;
       }
     }
-    
-    // Fallback: save to localStorage for export
-    localStorage.setItem('problems_temp', JSON.stringify(problems));
-    return true;
+    return false;
+  } catch (error) {
+    console.error('Error updating problem:', error);
+    throw error;
   }
-  return false;
 };
 
-// Theme management functions
+export const deleteProblem = async (themeId, problemId) => {
+  try {
+    const problems = getProblems();
+    if (problems[themeId]) {
+      const updatedProblems = { ...problems };
+      updatedProblems[themeId] = updatedProblems[themeId].filter(p => p.id !== problemId);
+      await saveProblemsToFirestore(updatedProblems);
+      problemsCache = updatedProblems;
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error deleting problem:', error);
+    throw error;
+  }
+};
+
 export const getThemeById = (themeId) => {
   const themes = getThemes();
   return themes.find(t => t.id === themeId);
 };
 
-// Add theme
 export const addTheme = async (theme) => {
-  const themes = getThemes();
-  themes.push(theme);
-  
-  if (useFirebase) {
-    const success = await saveThemesToFirestore(themes);
-    if (success) {
-      themesCache = themes;
+  try {
+    const themes = getThemes();
+    const updatedThemes = [...themes, theme];
+    await saveThemesToFirestore(updatedThemes);
+    themesCache = updatedThemes;
+    return true;
+  } catch (error) {
+    console.error('Error adding theme:', error);
+    throw error;
+  }
+};
+
+export const updateTheme = async (themeId, updatedTheme) => {
+  try {
+    const themes = getThemes();
+    const index = themes.findIndex(t => t.id === themeId);
+    if (index !== -1) {
+      const updatedThemes = [...themes];
+      updatedThemes[index] = { ...updatedTheme, id: themeId };
+      await saveThemesToFirestore(updatedThemes);
+      themesCache = updatedThemes;
       return true;
     }
+    return false;
+  } catch (error) {
+    console.error('Error updating theme:', error);
+    throw error;
   }
-  
-  // Fallback: save to localStorage for export
-  localStorage.setItem('themes_temp', JSON.stringify(themes));
-  return true;
 };
 
-// Update theme
-export const updateTheme = async (themeId, updatedTheme) => {
-  const themes = getThemes();
-  const index = themes.findIndex(t => t.id === themeId);
-  if (index !== -1) {
-    themes[index] = { ...updatedTheme, id: themeId };
-    
-    if (useFirebase) {
-      const success = await saveThemesToFirestore(themes);
-      if (success) {
-        themesCache = themes;
-        return true;
-      }
-    }
-    
-    // Fallback: save to localStorage for export
-    localStorage.setItem('themes_temp', JSON.stringify(themes));
-    return true;
-  }
-  return false;
-};
-
-// Delete theme
 export const deleteTheme = async (themeId) => {
-  const themes = getThemes();
-  const filteredThemes = themes.filter(t => t.id !== themeId);
-  if (filteredThemes.length < themes.length) {
-    if (useFirebase) {
-      const success = await saveThemesToFirestore(filteredThemes);
-      if (success) {
-        themesCache = filteredThemes;
-        // Also delete all problems in this theme
-        const problems = getProblems();
-        delete problems[themeId];
-        await saveProblemsToFirestore(problems);
-        problemsCache = problems;
-        return true;
-      }
-    }
+  try {
+    const themes = getThemes();
+    const filteredThemes = themes.filter(t => t.id !== themeId);
     
-    // Fallback: save to localStorage for export
-    localStorage.setItem('themes_temp', JSON.stringify(filteredThemes));
-    const problems = getProblems();
-    delete problems[themeId];
-    localStorage.setItem('problems_temp', JSON.stringify(problems));
-    return true;
+    if (filteredThemes.length < themes.length) {
+      await saveThemesToFirestore(filteredThemes);
+      themesCache = filteredThemes;
+      const problems = getProblems();
+      const updatedProblems = { ...problems };
+      delete updatedProblems[themeId];
+      await saveProblemsToFirestore(updatedProblems);
+      problemsCache = updatedProblems;
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error deleting theme:', error);
+    throw error;
   }
-  return false;
 };
 
-// Export functions (for backup/download)
 export const exportProblems = () => {
   const problems = getProblems();
   const dataStr = JSON.stringify(problems, null, 2);
@@ -398,11 +242,3 @@ export const exportThemes = () => {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
-
-// Initialize Firestore on module load
-if (useFirebase) {
-  initializeFirestore();
-  // Initial load
-  refreshProblems();
-  refreshThemes();
-}

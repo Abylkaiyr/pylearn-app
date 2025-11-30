@@ -19,6 +19,8 @@ import {
 } from '@ant-design/icons';
 import { getThemes, deleteTheme, getProblems, exportThemes, exportProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
+import { checkFirebaseStatus } from '../utils/firebaseDebug';
+import { isFirebaseConfigured } from '../utils/firebase';
 import { 
   CodeOutlined, 
   BulbOutlined, 
@@ -85,12 +87,13 @@ const AdminThemes = () => {
     };
   }, [navigate]);
 
-  const handleDelete = (themeId) => {
-    if (deleteTheme(themeId)) {
+  const handleDelete = async (themeId) => {
+    const success = await deleteTheme(themeId);
+    if (success) {
       message.success('Тақырып сәтті жойылды!');
-      loadThemes();
+      // Data will update automatically via real-time listeners
     } else {
-      message.error('Тақырыпты жою сәтсіз болды');
+      message.error('Тақырыпты жою сәтсіз болды. Firestore рұқсаттарын тексеріңіз.');
     }
   };
 
@@ -178,12 +181,23 @@ const AdminThemes = () => {
 
       <Card>
         <Alert
-          message="Маңызды ақпарат"
-          description="Бұл платформа JSON файлдарын бірден бір дерек көзі ретінде пайдаланады. Өзгерістерді сақтағаннан кейін 'JSON Экспорттау' батырмасын басып, файлдарды жүктеп алыңыз. Содан кейін оларды git-ке коммиттеңіз, осылайша барлық пайдаланушылар өзгерістерді көреді."
-          type="info"
+          type={isFirebaseConfigured() ? "success" : "info"}
+          message={
+            isFirebaseConfigured() 
+              ? "✅ Firebase қосылған - өзгерістер барлық пайдаланушыларға лезде көрінеді! Браузер консолінде (F12) Firebase статусын тексеру үшін: window.checkFirebase()"
+              : "⚠️ Firebase қосылмаған - JSON файлдары пайдаланылады. Өзгерістерді сақтағаннан кейін 'JSON Экспорттау' батырмасын басып, файлдарды жүктеп алыңыз. Содан кейін оларды git-ке коммиттеңіз."
+          }
           showIcon
           style={{ marginBottom: 24 }}
           closable
+          action={
+            <Button size="small" onClick={() => checkFirebaseStatus().then(status => {
+              message.info(`Firebase: ${status.configured ? '✅ Қосылған' : '❌ Қосылмаған'} | Дерек көзі: ${status.source}`, 5);
+              console.log('Firebase Status:', status);
+            })}>
+              Статусты Тексеру
+            </Button>
+          }
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <Title level={2} style={{ margin: 0 }}>Тақырыптарды Басқару</Title>

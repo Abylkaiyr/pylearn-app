@@ -15,7 +15,7 @@ import {
   CloudOutlined,
   SecurityScanOutlined
 } from '@ant-design/icons';
-import { getThemes, getProblems, refreshThemes, refreshProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
+import { getThemes, getProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
 import siteInfo from '../data/siteInfo.json';
 import gulsharatImage from '../assets/gulsharat.jpeg';
@@ -65,10 +65,6 @@ const Home = () => {
     const unsubscribeProblems = subscribeToProblems((data) => {
       setProblems(data);
     });
-    
-    // Also refresh once on mount (for non-Firebase or initial load)
-    refreshThemes().then((data) => setThemes(data));
-    refreshProblems().then((data) => setProblems(data));
     
     // Cleanup listeners on unmount
     return () => {

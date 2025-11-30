@@ -78,27 +78,9 @@ VITE_FIREBASE_APP_ID=your-app-id
 - A "Publish" button at the top
 - This is where you'll paste the rules below
 
-Once you're in the Rules tab, update them:
+Once you're in the Rules tab, **REPLACE ALL THE EXISTING RULES** with this:
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow read access to everyone
-    match /problems/{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null; // Only authenticated users can write
-    }
-    
-    match /themes/{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null; // Only authenticated users can write
-    }
-  }
-}
-```
-
-**For development/testing**, you can use:
+**⚠️ IMPORTANT: Your app uses localStorage authentication (NOT Firebase Auth), so you MUST use these open rules:**
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -110,7 +92,26 @@ service cloud.firestore {
 }
 ```
 
-⚠️ **Warning**: The test mode rules allow anyone to read/write. For production, implement proper authentication!
+**Steps to apply the rules:**
+1. **Copy the rules above** (the entire code block from `rules_version` to the closing `}`)
+2. **Delete all existing rules** in the Firebase Rules editor (select all and delete)
+3. **Paste the new rules** into the editor
+4. **Click the "Publish" button** (top right of the editor, usually blue/green)
+5. **Wait 10-30 seconds** for rules to propagate across Firebase servers
+6. **Try deleting a theme again** - it should work now!
+
+⚠️ **Why these rules?**
+- Your app uses **localStorage** for authentication (NOT Firebase Authentication)
+- Rules checking `request.auth != null` will **ALWAYS fail** because there's no Firebase user
+- These open rules allow anyone to read/write (required for your current setup)
+- For production later, you can implement Firebase Authentication and update rules
+
+**If you get "Missing or insufficient permissions" error:**
+- ✅ Make sure you **deleted all old rules** and pasted the new ones completely
+- ✅ Make sure you clicked **"Publish"** button (not just Save - look for a blue/green button at top)
+- ✅ Wait **10-30 seconds** after publishing (rules need time to propagate)
+- ✅ Check browser console - you should see `✅ Themes saved to Firestore successfully` after fix
+- ✅ If still failing, refresh Firebase Console and check the Rules tab shows your new rules
 
 **If you still can't find Rules:**
 
