@@ -37,6 +37,33 @@ const iconOptions = [
   { value: 'SecurityScanOutlined', label: 'Security', icon: SecurityScanOutlined },
 ];
 
+// Generate a unique ID from theme name
+const generateThemeId = (name, existingThemes) => {
+  // Convert to lowercase and replace spaces with hyphens
+  let baseId = name
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+  // If empty after processing, use a default
+  if (!baseId) {
+    baseId = 'theme';
+  }
+
+  // Check if ID already exists, if so append a number
+  let finalId = baseId;
+  let counter = 1;
+  while (existingThemes.find(t => t.id === finalId)) {
+    finalId = `${baseId}-${counter}`;
+    counter++;
+  }
+
+  return finalId;
+};
+
 const AdminThemeForm = () => {
   const { themeId } = useParams();
   const navigate = useNavigate();
@@ -67,34 +94,25 @@ const AdminThemeForm = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Generate ID if creating new theme
+      const existingThemes = getThemes();
+      
+      // Generate ID automatically from name for new themes
       const themeData = {
         ...values,
-        id: isEdit ? themeId : values.id || values.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        id: isEdit ? themeId : generateThemeId(values.name, existingThemes),
       };
 
       if (isEdit) {
-        updateTheme(themeId, themeData);
-        updateTheme(themeId, themeData);
+        await updateTheme(themeId, themeData);
         message.success('Тақырып сәтті жаңартылды!');
-        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       } else {
-        // Check if theme ID already exists
-        const existingThemes = getThemes();
-        if (existingThemes.find(t => t.id === themeData.id)) {
-          message.error('Осы ID-мен тақырып қазірдің өзінде бар. Басқа атау пайдаланыңыз.');
-          setLoading(false);
-          return;
-        }
-        addTheme(themeData);
+        await addTheme(themeData);
         message.success('Тақырып сәтті құрылды!');
-        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       }
 
       navigate('/admin/themes');
     } catch (error) {
       message.error('Тақырыпты сақтау кезінде қате орын алды');
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -121,22 +139,6 @@ const AdminThemeForm = () => {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item
-            label="Тақырып ID"
-            name="id"
-            rules={[
-              { required: !isEdit, message: 'Тақырып ID-ін енгізіңіз!' },
-              { pattern: /^[a-z0-9-]+$/, message: 'ID тек кіші әріптер, сандар және дефис болуы керек!' }
-            ]}
-            help={isEdit ? "Тақырып ID-ін өзгерту мүмкін емес" : "Бос қалдырылса, атаудан автоматты түрде құрылады (кіші әріптер, тек дефис)"}
-          >
-            <Input 
-              placeholder="мысалы, advanced-python" 
-              size="large" 
-              disabled={isEdit}
-            />
-          </Form.Item>
-
           <Form.Item
             label="Тақырып Атауы"
             name="name"

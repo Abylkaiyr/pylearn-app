@@ -19,8 +19,6 @@ import {
 } from '@ant-design/icons';
 import { getThemes, deleteTheme, getProblems, exportThemes, exportProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
-import { checkFirebaseStatus } from '../utils/firebaseDebug';
-import { isFirebaseConfigured } from '../utils/firebase';
 import { 
   CodeOutlined, 
   BulbOutlined, 
@@ -68,8 +66,10 @@ const AdminThemes = () => {
     // Initial load
     const loadedThemes = getThemes();
     const loadedProblems = getProblems();
-    setThemes(loadedThemes);
-    setProblems(loadedProblems);
+    setTimeout(() => {
+      setThemes(loadedThemes);
+      setProblems(loadedProblems);
+    }, 0);
     
     // Set up real-time listeners
     const unsubscribeThemes = subscribeToThemes((data) => {
@@ -180,25 +180,6 @@ const AdminThemes = () => {
       </Button>
 
       <Card>
-        <Alert
-          type={isFirebaseConfigured() ? "success" : "info"}
-          message={
-            isFirebaseConfigured() 
-              ? "✅ Firebase қосылған - өзгерістер барлық пайдаланушыларға лезде көрінеді! Браузер консолінде (F12) Firebase статусын тексеру үшін: window.checkFirebase()"
-              : "⚠️ Firebase қосылмаған - JSON файлдары пайдаланылады. Өзгерістерді сақтағаннан кейін 'JSON Экспорттау' батырмасын басып, файлдарды жүктеп алыңыз. Содан кейін оларды git-ке коммиттеңіз."
-          }
-          showIcon
-          style={{ marginBottom: 24 }}
-          closable
-          action={
-            <Button size="small" onClick={() => checkFirebaseStatus().then(status => {
-              message.info(`Firebase: ${status.configured ? '✅ Қосылған' : '❌ Қосылмаған'} | Дерек көзі: ${status.source}`, 5);
-              console.log('Firebase Status:', status);
-            })}>
-              Статусты Тексеру
-            </Button>
-          }
-        />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <Title level={2} style={{ margin: 0 }}>Тақырыптарды Басқару</Title>
           <Space>
