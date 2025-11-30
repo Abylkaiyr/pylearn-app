@@ -15,7 +15,8 @@ import {
   PlusOutlined, 
   EditOutlined, 
   DeleteOutlined,
-  ArrowLeftOutlined 
+  ArrowLeftOutlined,
+  FileTextOutlined
 } from '@ant-design/icons';
 import { getThemes, deleteTheme, getProblems, exportThemes, exportProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
@@ -183,6 +184,13 @@ const AdminThemes = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <Title level={2} style={{ margin: 0 }}>Тақырыптарды Басқару</Title>
           <Space>
+            <Button
+              icon={<FileTextOutlined />}
+              onClick={() => navigate('/admin/json-import')}
+              size="large"
+            >
+              JSON Импорттау
+            </Button>
             <Button
               onClick={() => {
                 exportThemes();

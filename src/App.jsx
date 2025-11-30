@@ -9,6 +9,7 @@ import ProblemDetail from './pages/ProblemDetail';
 import AdminProblemForm from './pages/AdminProblemForm';
 import AdminThemes from './pages/AdminThemes';
 import AdminThemeForm from './pages/AdminThemeForm';
+import JsonImport from './pages/JsonImport';
 import { isAuthenticated } from './utils/auth';
 import './App.css';
 
@@ -56,6 +57,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminThemeForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/json-import"
+              element={
+                <ProtectedRoute>
+                  <JsonImport />
                 </ProtectedRoute>
               }
             />
