@@ -1,9 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-// Firebase configuration
-// Replace these with your Firebase project config
-// Get this from Firebase Console > Project Settings > General > Your apps
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "your-api-key",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "your-project.firebaseapp.com",
@@ -13,13 +11,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "your-app-id"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
-// Check if Firebase is properly configured
 export const isFirebaseConfigured = () => {
   return firebaseConfig.apiKey !== "your-api-key" && 
          firebaseConfig.projectId !== "your-project-id";

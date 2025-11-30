@@ -60,7 +60,6 @@ const AdminProblemForm = () => {
 
       navigate(`/problems/${themeId}`);
     } catch (error) {
-      console.error(error);
       message.error('Есепті сақтау кезінде қате орын алды');
     } finally {
       setLoading(false);
@@ -143,10 +142,12 @@ const AdminProblemForm = () => {
           </Form.Item>
 
           <Form.Item
-            label="Бейне URL (міндетті емес)"
+            label="YouTube Бейне Сілтемесі (міндетті емес)"
             name="videoUrl"
           >
-            <Input placeholder="YouTube embed URL немесе бейне сілтемесі" />
+            <Input 
+              placeholder="YouTube сілтемесі (мысалы: https://www.youtube.com/watch?v=VIDEO_ID)" 
+            />
           </Form.Item>
 
           <Form.Item
@@ -186,7 +187,12 @@ const AdminProblemForm = () => {
 
           <Form.Item>
             <Space>
-              <Button type="primary" htmlType="submit" loading={loading} size="large">
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                loading={loading} 
+                size="large"
+              >
                 {isEdit ? 'Есепті Жаңарту' : 'Есеп Құру'}
               </Button>
               <Button onClick={() => navigate(`/problems/${themeId}`)} size="large">

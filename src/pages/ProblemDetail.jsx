@@ -5,6 +5,7 @@ import { ArrowLeftOutlined, EditOutlined, DeleteOutlined, PlayCircleOutlined } f
 import { getProblemById, deleteProblem } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
 import PythonCompiler from '../components/PythonCompiler';
+import { convertYouTubeToEmbed, isFirebaseStorageUrl } from '../utils/videoUtils';
 import './ProblemDetail.css';
 
 const { Title, Paragraph } = Typography;
@@ -94,18 +95,35 @@ const ProblemDetail = () => {
         {problem.videoUrl && (
           <Panel header="Бейне талдау" key="3">
             <div className="video-container">
-              {problem.videoUrl.startsWith('http') ? (
-                <iframe
-                  width="100%"
-                  height="400"
-                  src={problem.videoUrl}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ) : (
-                <Paragraph>Video URL: {problem.videoUrl}</Paragraph>
-              )}
+              {(() => {
+                const embedUrl = convertYouTubeToEmbed(problem.videoUrl);
+                if (embedUrl) {
+                  return (
+                    <iframe
+                      width="100%"
+                      height="400"
+                      src={embedUrl}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  );
+                } else if (isFirebaseStorageUrl(problem.videoUrl)) {
+                  return (
+                    <video
+                      width="100%"
+                      height="400"
+                      controls
+                      style={{ maxWidth: '100%' }}
+                    >
+                      <source src={problem.videoUrl} type="video/mp4" />
+                      Сіздің браузеріңіз бейне форматын қолдамайды.
+                    </video>
+                  );
+                } else {
+                  return <Paragraph>Video URL: {problem.videoUrl}</Paragraph>;
+                }
+              })()}
             </div>
           </Panel>
         )}

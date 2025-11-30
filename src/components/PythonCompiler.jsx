@@ -128,8 +128,8 @@ sys.stdout = StringIO()
     <Card className="compiler-card">
       <Title level={4}>Python Компиляторы</Title>
       
-      {/* <div className="compiler-section">
-        <Text strong>Кіру (қажет болса):</Text>
+      <div className="compiler-section">
+        <Text strong>input енгізіңіз:</Text>
         <TextArea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -137,7 +137,7 @@ sys.stdout = StringIO()
           rows={3}
           style={{ marginTop: 8, marginBottom: 16 }}
         />
-      </div> */}
+      </div>
 
       <div className="compiler-section">
         {/* <Space style={{ marginBottom: 8 }}>
