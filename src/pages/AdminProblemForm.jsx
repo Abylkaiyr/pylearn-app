@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Card, Typography, message, Space } from 'antd';
+import { Form, Input, Button, Card, Typography, message, Space, Alert } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { getProblemById, addProblem, updateProblem, getThemes } from '../utils/dataManager';
+import { getProblemById, addProblem, updateProblem, getThemes, exportProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
 import './AdminProblemForm.css';
 
@@ -20,7 +20,7 @@ const AdminProblemForm = () => {
   useEffect(() => {
     const user = getCurrentUser();
     if (!user || !user.isAdmin) {
-      message.error('Access denied. Admin only.');
+      message.error('Қол жеткізу тыйым салынған. Тек админдер үшін.');
       navigate('/');
       return;
     }
@@ -35,7 +35,7 @@ const AdminProblemForm = () => {
       if (problem) {
         form.setFieldsValue(problem);
       } else {
-        message.error('Problem not found');
+        message.error('Есеп табылмады');
         navigate(`/problems/${themeId}`);
       }
     }
@@ -52,15 +52,18 @@ const AdminProblemForm = () => {
 
       if (isEdit) {
         updateProblem(themeId, problemId, problemData);
-        message.success('Problem updated successfully!');
+        message.success('Есеп сәтті жаңартылды!');
+        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       } else {
         addProblem(themeId, problemData);
-        message.success('Problem created successfully!');
+        message.success('Есеп сәтті құрылды!');
+        message.info('JSON файлын экспорттау үшін басқару бетіне өтіңіз', 5);
       }
 
       navigate(`/problems/${themeId}`);
     } catch (error) {
-      message.error('An error occurred while saving the problem');
+      console.error(error);
+      message.error('Есепті сақтау кезінде қате орын алды');
     } finally {
       setLoading(false);
     }
@@ -77,13 +80,22 @@ const AdminProblemForm = () => {
         onClick={() => navigate(`/problems/${themeId}`)}
         style={{ marginBottom: 20 }}
       >
-        Back
+        Артқа
       </Button>
 
       <Card>
         <Title level={2}>
-          {isEdit ? 'Edit Problem' : 'Create New Problem'} - {theme.name}
+          {isEdit ? 'Есепті Өңдеу' : 'Жаңа Есеп Құру'} - {theme.name}
         </Title>
+        
+        <Alert
+          message="Есіңізде болсын"
+          description="Өзгерістерді сақтағаннан кейін 'Тақырыптарды Басқару' бетінде 'JSON Экспорттау' батырмасын басып, файлдарды жүктеп алыңыз және git-ке коммиттеңіз."
+          type="info"
+          showIcon
+          style={{ marginBottom: 24 }}
+          closable
+        />
 
         <Form
           form={form}
@@ -92,95 +104,95 @@ const AdminProblemForm = () => {
           autoComplete="off"
         >
           <Form.Item
-            label="Title"
+            label="Тақырып"
             name="title"
-            rules={[{ required: true, message: 'Please enter the problem title!' }]}
+            rules={[{ required: true, message: 'Есеп тақырыбын енгізіңіз!' }]}
           >
-            <Input placeholder="Problem title" size="large" />
+            <Input placeholder="Есеп тақырыбы" size="large" />
           </Form.Item>
 
           <Form.Item
-            label="Problem Text"
+            label="Есеп Мәтіні"
             name="problemText"
-            rules={[{ required: true, message: 'Please enter the problem description!' }]}
+            rules={[{ required: true, message: 'Есеп сипаттамасын енгізіңіз!' }]}
           >
             <TextArea
               rows={6}
-              placeholder="Describe the problem in detail..."
+              placeholder="Есепті егжей-тегжейлі сипаттаңыз..."
             />
           </Form.Item>
 
           <Form.Item
-            label="Input Description"
+            label="Кіру Сипаттамасы"
             name="input"
-            rules={[{ required: true, message: 'Please describe the input format!' }]}
+            rules={[{ required: true, message: 'Кіру форматын сипаттаңыз!' }]}
           >
             <TextArea
               rows={3}
-              placeholder="Describe the input format and provide examples"
+              placeholder="Кіру форматын сипаттап, мысалдар келтіріңіз"
             />
           </Form.Item>
 
           <Form.Item
-            label="Output Description"
+            label="Шығару Сипаттамасы"
             name="output"
-            rules={[{ required: true, message: 'Please describe the expected output!' }]}
+            rules={[{ required: true, message: 'Күтілетін шығаруды сипаттаңыз!' }]}
           >
             <TextArea
               rows={3}
-              placeholder="Describe the expected output format and provide examples"
+              placeholder="Күтілетін шығару форматын сипаттап, мысалдар келтіріңіз"
             />
           </Form.Item>
 
           <Form.Item
-            label="Video URL (optional)"
+            label="Бейне URL (міндетті емес)"
             name="videoUrl"
           >
-            <Input placeholder="YouTube embed URL or video link" />
+            <Input placeholder="YouTube embed URL немесе бейне сілтемесі" />
           </Form.Item>
 
           <Form.Item
-            label="Solution Code"
+            label="Шешім Коды"
             name="solution"
-            rules={[{ required: true, message: 'Please provide the solution code!' }]}
+            rules={[{ required: true, message: 'Шешім кодын көрсетіңіз!' }]}
           >
             <TextArea
               rows={8}
-              placeholder="Write the solution code here..."
+              placeholder="Шешім кодын осы жерге жазыңыз..."
               style={{ fontFamily: 'monospace' }}
             />
           </Form.Item>
 
           <Form.Item
-            label="Explanation"
+            label="Түсіндірме"
             name="explanation"
-            rules={[{ required: true, message: 'Please provide an explanation!' }]}
+            rules={[{ required: true, message: 'Түсіндірме беріңіз!' }]}
           >
             <TextArea
               rows={6}
-              placeholder="Explain how the solution works..."
+              placeholder="Шешімнің қалай жұмыс істейтінін түсіндіріңіз..."
             />
           </Form.Item>
 
-          <Form.Item
-            label="Test Cases (JSON format, optional)"
+          {/* <Form.Item
+            label="Тест Кейстері (JSON форматы, міндетті емес)"
             name="testCases"
-            help='Format: [{"input": "...", "expectedOutput": "..."}]'
+            help='Формат: [{"input": "...", "expectedOutput": "..."}]'
           >
             <TextArea
               rows={4}
               placeholder='[{"input": "5 3", "expectedOutput": "8"}]'
               style={{ fontFamily: 'monospace' }}
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Space>
               <Button type="primary" htmlType="submit" loading={loading} size="large">
-                {isEdit ? 'Update Problem' : 'Create Problem'}
+                {isEdit ? 'Есепті Жаңарту' : 'Есеп Құру'}
               </Button>
               <Button onClick={() => navigate(`/problems/${themeId}`)} size="large">
-                Cancel
+                Болдырмау
               </Button>
             </Space>
           </Form.Item>

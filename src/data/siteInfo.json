@@ -1,14 +1,14 @@
 {
-  "title": "Python Learning Platform",
-  "creator": "Python Learning Team",
-  "aim": "This platform aims to help beginners learn Python programming through interactive problems and solutions. We provide a comprehensive collection of problems categorized by difficulty and topic, along with detailed explanations and solutions.",
-  "description": "A comprehensive Python learning platform with problems, solutions, and interactive coding environment.",
+  "title": "Python Оқыту Платформасы",
+  "creator": "Python Оқыту Тобы",
+  "aim": "Бұл платформа бастапқыларға интерактивті есептер мен шешімдер арқылы Python бағдарламалауды үйренуге көмектесуге бағытталған. Біз қиындық пен тақырып бойынша жіктелген есептердің кең жинағымен қатар, егжей-тегжейлі түсіндірмелер мен шешімдерді ұсынамыз.",
+  "description": "Есептер, шешімдер және интерактивті кодтау ортасы бар кең Python оқыту платформасы.",
   "features": [
-    "Interactive problem-solving",
-    "Detailed explanations",
-    "Video tutorials",
-    "Online Python compiler",
-    "Progress tracking"
+    "Интерактивті есептерді шешу",
+    "Егжей-тегжейлі түсіндірмелер",
+    "Бейне сабақтар",
+    "Онлайн Python компиляторы",
+    "Прогресті бақылау"
   ]
 }
 

@@ -16,13 +16,13 @@ const Register = () => {
     try {
       const result = register(values.username, values.email, values.password);
       if (result.success) {
-        message.success('Registration successful!');
+        message.success('Тіркелу сәтті болды!');
         navigate('/');
       } else {
-        message.error(result.message || 'Registration failed');
+        message.error(result.message || 'Тіркелу сәтсіз болды');
       }
     } catch (error) {
-      message.error('An error occurred during registration');
+      message.error('Тіркелу кезінде қате орын алды');
     } finally {
       setLoading(false);
     }
@@ -32,7 +32,7 @@ const Register = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <Title level={2} style={{ textAlign: 'center', marginBottom: 30 }}>
-          Register
+          Тіркелу
         </Title>
         <Form
           name="register"
@@ -41,69 +41,69 @@ const Register = () => {
           layout="vertical"
         >
           <Form.Item
-            label="Username"
+            label="Пайдаланушы аты"
             name="username"
             rules={[
-              { required: true, message: 'Please input your username!' },
-              { min: 3, message: 'Username must be at least 3 characters' }
+              { required: true, message: 'Пайдаланушы атын енгізіңіз!' },
+              { min: 3, message: 'Пайдаланушы аты кемінде 3 таңбадан тұруы керек' }
             ]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="Username"
+              placeholder="Пайдаланушы аты"
               size="large"
             />
           </Form.Item>
 
           <Form.Item
-            label="Email"
+            label="Электрондық пошта"
             name="email"
             rules={[
-              { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
+              { required: true, message: 'Электрондық поштаны енгізіңіз!' },
+              { type: 'email', message: 'Дұрыс электрондық пошта енгізіңіз!' }
             ]}
           >
             <Input
               prefix={<MailOutlined />}
-              placeholder="Email"
+              placeholder="Электрондық пошта"
               size="large"
             />
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label="Құпия сөз"
             name="password"
             rules={[
-              { required: true, message: 'Please input your password!' },
-              { min: 6, message: 'Password must be at least 6 characters' }
+              { required: true, message: 'Құпия сөзді енгізіңіз!' },
+              { min: 6, message: 'Құпия сөз кемінде 6 таңбадан тұруы керек' }
             ]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="Password"
+              placeholder="Құпия сөз"
               size="large"
             />
           </Form.Item>
 
           <Form.Item
-            label="Confirm Password"
+            label="Құпия сөзді растау"
             name="confirmPassword"
             dependencies={['password']}
             rules={[
-              { required: true, message: 'Please confirm your password!' },
+              { required: true, message: 'Құпия сөзді растаңыз!' },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('Passwords do not match!'));
+                  return Promise.reject(new Error('Құпия сөздер сәйкес келмейді!'));
                 },
               }),
             ]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="Confirm Password"
+              placeholder="Құпия сөзді растау"
               size="large"
             />
           </Form.Item>
@@ -116,12 +116,12 @@ const Register = () => {
               block
               size="large"
             >
-              Register
+              Тіркелу
             </Button>
           </Form.Item>
         </Form>
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          Already have an account? <Link to="/login">Login here</Link>
+          Тіркелгіңіз бар ма? <Link to="/login">Мұнда кіріңіз</Link>
         </div>
       </Card>
     </div>

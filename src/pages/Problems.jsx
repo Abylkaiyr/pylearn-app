@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Typography, Button, Space, Empty } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
-import { getThemes, getProblemsByTheme } from '../utils/dataManager';
+import { getThemes, getProblemsByTheme, refreshThemes, refreshProblems, subscribeToThemes, subscribeToProblems } from '../utils/dataManager';
 import { getCurrentUser } from '../utils/auth';
 import './Problems.css';
 
@@ -16,14 +16,43 @@ const Problems = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const themes = getThemes();
-    const foundTheme = themes.find(t => t.id === themeId);
-    setTheme(foundTheme);
+    // Load initial data
+    const initialThemes = getThemes();
+    const foundTheme = initialThemes.find(t => t.id === themeId);
+    const initialProblems = getProblemsByTheme(themeId);
+    const initialUser = getCurrentUser();
     
-    const loadedProblems = getProblemsByTheme(themeId);
-    setProblems(loadedProblems);
+    setTimeout(() => {
+      setTheme(foundTheme);
+      setProblems(initialProblems);
+      setUser(initialUser);
+    }, 0);
     
-    setUser(getCurrentUser());
+    // Set up real-time listeners
+    const unsubscribeThemes = subscribeToThemes((themes) => {
+      const updatedTheme = themes.find(t => t.id === themeId);
+      setTheme(updatedTheme);
+    });
+    
+    const unsubscribeProblems = subscribeToProblems((problemsData) => {
+      const updatedProblems = problemsData[themeId] || [];
+      setProblems(updatedProblems);
+    });
+    
+    // Also refresh once on mount
+    refreshThemes().then((themes) => {
+      const updatedTheme = themes.find(t => t.id === themeId);
+      setTheme(updatedTheme);
+    });
+    refreshProblems().then((problemsData) => {
+      setProblems(problemsData[themeId] || []);
+    });
+    
+    // Cleanup
+    return () => {
+      if (unsubscribeThemes) unsubscribeThemes();
+      if (unsubscribeProblems) unsubscribeProblems();
+    };
   }, [themeId]);
 
   const isAdmin = user?.isAdmin;
@@ -35,7 +64,7 @@ const Problems = () => {
         onClick={() => navigate('/')}
         style={{ marginBottom: 20 }}
       >
-        Back to Home
+        Басты бетке оралу
       </Button>
 
       {theme && (
@@ -54,12 +83,12 @@ const Problems = () => {
           onClick={() => navigate(`/admin/problem/${themeId}/new`)}
           style={{ marginBottom: 20 }}
         >
-          Add New Problem
+          Жаңа Есеп Қосу
         </Button>
       )}
 
       {problems.length === 0 ? (
-        <Empty description="No problems available in this category yet" />
+        <Empty description="Бұл категорияда әлі есептер жоқ" />
       ) : (
         <div className="problems-list">
           {problems.map((problem) => (

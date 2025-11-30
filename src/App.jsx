@@ -7,6 +7,8 @@ import Register from './pages/Register';
 import Problems from './pages/Problems';
 import ProblemDetail from './pages/ProblemDetail';
 import AdminProblemForm from './pages/AdminProblemForm';
+import AdminThemes from './pages/AdminThemes';
+import AdminThemeForm from './pages/AdminThemeForm';
 import { isAuthenticated } from './utils/auth';
 import './App.css';
 
@@ -38,6 +40,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AdminProblemForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/themes"
+              element={
+                <ProtectedRoute>
+                  <AdminThemes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/theme/:themeId"
+              element={
+                <ProtectedRoute>
+                  <AdminThemeForm />
                 </ProtectedRoute>
               }
             />

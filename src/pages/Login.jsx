@@ -16,13 +16,13 @@ const Login = () => {
     try {
       const result = login(values.username, values.password);
       if (result.success) {
-        message.success('Login successful!');
+        message.success('Кіру сәтті болды!');
         navigate('/');
       } else {
-        message.error(result.message || 'Login failed');
+        message.error(result.message || 'Кіру сәтсіз болды');
       }
     } catch (error) {
-      message.error('An error occurred during login');
+      message.error('Кіру кезінде қате орын алды');
     } finally {
       setLoading(false);
     }
@@ -32,7 +32,7 @@ const Login = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <Title level={2} style={{ textAlign: 'center', marginBottom: 30 }}>
-          Login
+          Кіру
         </Title>
         <Form
           name="login"
@@ -41,25 +41,25 @@ const Login = () => {
           layout="vertical"
         >
           <Form.Item
-            label="Username"
+            label="Пайдаланушы аты"
             name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[{ required: true, message: 'Пайдаланушы атын енгізіңіз!' }]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="Username"
+              placeholder="Пайдаланушы аты"
               size="large"
             />
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label="Құпия сөз"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: 'Құпия сөзді енгізіңіз!' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="Password"
+              placeholder="Құпия сөз"
               size="large"
             />
           </Form.Item>
@@ -72,17 +72,17 @@ const Login = () => {
               block
               size="large"
             >
-              Login
+              Кіру
             </Button>
           </Form.Item>
         </Form>
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-          Don't have an account? <Link to="/register">Register here</Link>
+          Тіркелгіңіз жоқ па? <Link to="/register">Мұнда тіркеліңіз</Link>
         </div>
         <div style={{ marginTop: 16, padding: 12, background: '#f0f0f0', borderRadius: 4, fontSize: '12px' }}>
-          <strong>Demo Accounts:</strong><br />
-          Admin: admin / admin123<br />
-          Teacher: teacher / teacher123
+          <strong>Демо Тіркелгілер:</strong><br />
+          Админ: admin / admin123<br />
+          Мұғалім: teacher / teacher123
         </div>
       </Card>
     </div>

@@ -39,14 +39,14 @@ const PythonCompiler = ({ problem, onRunCode }) => {
       // Provide more detailed error information
       const errorMessage = error.message || 'Unknown error';
       console.error('Pyodide error details:', errorMessage);
-      message.error(`Failed to load Python compiler: ${errorMessage}. Please check your internet connection.`);
+      message.error(`Python компиляторын жүктеу сәтсіз болды: ${errorMessage}. Интернет байланысын тексеріңіз.`);
       return null;
     }
   };
 
   const runCode = async () => {
     if (!code.trim()) {
-      message.warning('Please write some code first');
+      message.warning('Алдымен код жазыңыз');
       return;
     }
 
@@ -56,13 +56,13 @@ const PythonCompiler = ({ problem, onRunCode }) => {
     try {
       const pyodideInstance = await loadPyodide();
       if (!pyodideInstance) {
-        setOutput('Error: Could not load Python compiler');
+        setOutput('Қате: Python компиляторын жүктеу мүмкін болмады');
         setLoading(false);
         return;
       }
 
       // Set up input function
-      let inputIndex = 0;
+      // let inputIndex = 0;
       const inputLines = input.split('\n').filter(line => line.trim());
       
       pyodideInstance.runPython(`
@@ -106,7 +106,7 @@ sys.stdout = StringIO()
         setOutput(`Error: ${error.message || error}`);
       }
     } catch (error) {
-      setOutput(`Error: ${error.message || 'An error occurred while running the code'}`);
+      setOutput(`Қате: ${error.message || 'Кодты іске қосу кезінде қате орын алды'}`);
     } finally {
       setLoading(false);
     }
@@ -118,38 +118,38 @@ sys.stdout = StringIO()
     setInput('');
   };
 
-  const loadSolution = () => {
-    if (problem?.solution) {
-      setCode(problem.solution);
-    }
-  };
+  // const loadSolution = () => {
+  //   if (problem?.solution) {
+  //     setCode(problem.solution);
+  //   }
+  // };
 
   return (
     <Card className="compiler-card">
-      <Title level={4}>Python Compiler</Title>
+      <Title level={4}>Python Компиляторы</Title>
       
-      <div className="compiler-section">
-        <Text strong>Input (if required):</Text>
+      {/* <div className="compiler-section">
+        <Text strong>Кіру (қажет болса):</Text>
         <TextArea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter input here (one line per input, if multiple)"
+          placeholder="Кіруді осы жерге енгізіңіз (бірнеше болса, әрбірі бір жолда)"
           rows={3}
           style={{ marginTop: 8, marginBottom: 16 }}
         />
-      </div>
+      </div> */}
 
       <div className="compiler-section">
-        <Space style={{ marginBottom: 8 }}>
-          <Text strong>Code:</Text>
+        {/* <Space style={{ marginBottom: 8 }}>
+          <Text strong>Код:</Text>
           <Button size="small" onClick={loadSolution}>
-            Load Solution
+            Шешімді Жүктеу
           </Button>
-        </Space>
+        </Space> */}
         <TextArea
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="Write your Python code here..."
+          placeholder="Python кодыңызды осы жерге жазыңыз..."
           rows={10}
           style={{ fontFamily: 'monospace' }}
         />
@@ -162,10 +162,10 @@ sys.stdout = StringIO()
           onClick={runCode}
           loading={loading}
         >
-          Run Code
+          Кодты Іске Қосу
         </Button>
         <Button icon={<ClearOutlined />} onClick={clearCode}>
-          Clear
+          Тазалау
         </Button>
       </Space>
 

@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
     {
       key: '/',
       icon: <HomeOutlined />,
-      label: <Link to="/">Home</Link>,
+      label: <Link to="/">Басты бет</Link>,
     },
   ];
 
@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
           <div className="logo">
             <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
               <Text strong style={{ color: 'white', fontSize: 18 }}>
-                Python Learning
+                Python Оқыту
               </Text>
             </Link>
           </div>
@@ -63,7 +63,7 @@ const Layout = ({ children }) => {
                   onClick={handleLogout}
                   style={{ color: 'white' }}
                 >
-                  Logout
+                  Шығу
                 </Button>
               </Space>
             ) : (
@@ -74,13 +74,13 @@ const Layout = ({ children }) => {
                   onClick={() => navigate('/login')}
                   style={{ color: 'white' }}
                 >
-                  Login
+                  Кіру
                 </Button>
                 <Button
                   type="primary"
                   onClick={() => navigate('/register')}
                 >
-                  Register
+                  Тіркелу
                 </Button>
               </Space>
             )}
@@ -91,7 +91,7 @@ const Layout = ({ children }) => {
         {children}
       </Content>
       <Footer className="app-footer">
-        Python Learning Platform ©2024 - Learn Python Programming
+        Python Оқыту Платформасы ©2024 - Python Бағдарламалауды Үйреніңіз
       </Footer>
     </AntLayout>
   );
