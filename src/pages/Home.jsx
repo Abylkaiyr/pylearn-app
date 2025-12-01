@@ -77,6 +77,14 @@ const Home = () => {
     return problems[themeId]?.length || 0;
   };
 
+  const handleThemeClick = (themeId) => {
+    if (themeId === 'theme-6') {
+      window.open('https://codeforces.com/gym/569703', '_blank');
+    } else {
+      navigate(`/problems/${themeId}`);
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="hero-section">
@@ -163,7 +171,7 @@ const Home = () => {
                 <Card
                   hoverable
                   className="theme-card"
-                  onClick={() => navigate(`/problems/${theme.id}`)}
+                  onClick={() => handleThemeClick(theme.id)}
                   cover={
                     <div className="theme-icon-container">
                       <IconComponent className="theme-icon" />
