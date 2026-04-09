@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Form, Input, Button, Card, message, Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../utils/auth';
-import './Login.css';
+import { useState } from "react";
+import { Form, Input, Button, Card, message, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { useNavigate, Link } from "react-router-dom";
+import { login } from "../utils/auth";
+import "./Login.css";
 
 const { Title } = Typography;
 
@@ -16,13 +16,13 @@ const Login = () => {
     try {
       const result = login(values.username, values.password);
       if (result.success) {
-        message.success('Кіру сәтті болды!');
-        navigate('/');
+        message.success("Кіру сәтті болды!");
+        navigate("/");
       } else {
-        message.error(result.message || 'Кіру сәтсіз болды');
+        message.error(result.message || "Кіру сәтсіз болды");
       }
     } catch (error) {
-      message.error('Кіру кезінде қате орын алды');
+      message.error("Кіру кезінде қате орын алды");
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ const Login = () => {
   return (
     <div className="auth-container">
       <Card className="auth-card">
-        <Title level={2} style={{ textAlign: 'center', marginBottom: 30 }}>
+        <Title level={2} style={{ textAlign: "center", marginBottom: 30 }}>
           Кіру
         </Title>
         <Form
@@ -43,7 +43,7 @@ const Login = () => {
           <Form.Item
             label="Пайдаланушы аты"
             name="username"
-            rules={[{ required: true, message: 'Пайдаланушы атын енгізіңіз!' }]}
+            rules={[{ required: true, message: "Пайдаланушы атын енгізіңіз!" }]}
           >
             <Input
               prefix={<UserOutlined />}
@@ -55,7 +55,7 @@ const Login = () => {
           <Form.Item
             label="Құпия сөз"
             name="password"
-            rules={[{ required: true, message: 'Құпия сөзді енгізіңіз!' }]}
+            rules={[{ required: true, message: "Құпия сөзді енгізіңіз!" }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
@@ -76,18 +76,17 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
+        <div style={{ textAlign: "center", marginTop: 16 }}>
           Тіркелгіңіз жоқ па? <Link to="/register">Мұнда тіркеліңіз</Link>
         </div>
-        <div style={{ marginTop: 16, padding: 12, background: '#f0f0f0', borderRadius: 4, fontSize: '12px' }}>
+        {/* <div style={{ marginTop: 16, padding: 12, background: '#f0f0f0', borderRadius: 4, fontSize: '12px' }}>
           <strong>Демо Тіркелгілер:</strong><br />
           Админ: admin / admin123<br />
           Мұғалім: teacher / teacher123
-        </div>
+        </div> */}
       </Card>
     </div>
   );
 };
 
 export default Login;
-
